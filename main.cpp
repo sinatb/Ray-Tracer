@@ -1,4 +1,8 @@
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#include "./lib/stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "./lib/stb_image_write.h"
 
 using namespace std;
 int main() {
@@ -6,7 +10,7 @@ int main() {
     int width = 256;
     int height = 256;
 
-
+    uint8_t image_data[width*height*3];
     //Render
     for (int i=0; i<height; i++)
     {
@@ -20,8 +24,12 @@ int main() {
             int ig = static_cast<int>(255.999*g);
             int ib = static_cast<int>(255.999*b);
 
-            cout << "r : " << ir << " g : " << ig << " b : " << ib << '\n';
+            image_data[i*width*3 + j*3] = ir;
+            image_data[i*width*3 + j*3 + 1] = ig;
+            image_data[i*width*3 + j*3 + 2] = ib;
+
         }
     }
+    stbi_write_png("../Images/first_image.png",width,height,3,image_data,width*3);
     return 0;
 }

@@ -5,5 +5,4 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Ray_Tracer main.cpp)
 
-./main.cpp > image.ppm
 
