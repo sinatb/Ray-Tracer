@@ -14,20 +14,19 @@ int main() {
     //Render
     for (int i=0; i<height; i++)
     {
-        for (int j=0; j<width; j++)
-        {
-            auto r = double(i) / (height+1);
+        clog <<'\r'<< "Progress : " << i << " / " << height << " " << flush;
+        for (int j=0; j<width; j++) {
+            auto r = double(i) / (height + 1);
             auto g = 0;
-            auto b=double (j) / (width+1);
+            auto b = double(j) / (width + 1);
 
-            int ir = static_cast<int>(255.999*r);
-            int ig = static_cast<int>(255.999*g);
-            int ib = static_cast<int>(255.999*b);
+            int ir = static_cast<int>(255.999 * r);
+            int ig = static_cast<int>(255.999 * g);
+            int ib = static_cast<int>(255.999 * b);
 
-            image_data[i*width*3 + j*3] = ir;
-            image_data[i*width*3 + j*3 + 1] = ig;
-            image_data[i*width*3 + j*3 + 2] = ib;
-
+            image_data[i * width * 3 + j * 3] = ir;
+            image_data[i * width * 3 + j * 3 + 1] = ig;
+            image_data[i * width * 3 + j * 3 + 2] = ib;
         }
     }
     stbi_write_png("../Images/first_image.png",width,height,3,image_data,width*3);
