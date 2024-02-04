@@ -5,13 +5,10 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#endif //VEC3_H
-
 #include "iostream"
 #include "cmath"
 
 using std::sqrt;
-
 class vec3{
     public:
         double e[3];
@@ -60,5 +57,41 @@ class vec3{
             return sqrt(length_squared());
         }
 };
+using point3 = vec3;
 
+inline vec3 operator+ (const vec3& a, const vec3& b){
+    return {a.x() + b.x(), a.y() + b.y() , a.z() + b.z()};
+}
+inline vec3 operator- (const vec3& a, const vec3& b){
+    return {a.x()-b.x(), a.y()-b.y(), a.z()-b.z()};
+}
+inline vec3 operator* (const vec3& a, const vec3& b){
+    return {a.x()*b.x(), a.y()*b.y(), a.z()*b.z()};
+}
+inline vec3 operator* (const double t, const vec3& b){
+    return {t*b.x(), t*b.y(), t*b.z()};
+}
+inline vec3 operator* (const vec3& a, const double t){
+    return t*a;
+}
+inline vec3 operator/ (const vec3& a, const double t){
+    return {a.x()/t, a.y()/t, a.z()/t};
+}
+inline std::ostream& operator<<(std::ostream &out, vec3& a){
+    return out << a.x() << " " << a.y() << " " << a.z();
+}
+inline double dot(vec3& a, vec3& b){
+    return a.x()*b.x() +
+           a.y()*b.y() +
+           a.z()*b.z();
+}
+inline vec3 cross(vec3& a, vec3& b){
+    return {a.y() * b.z() - a.z() * b.y(),
+            a.z() * b.x() - a.x() * b.z(),
+            a.x() * b.y() - a.y() * b.x()};
+}
+inline vec3 unit_vector(vec3& a){
+    return a/a.length();
+}
+#endif //VEC3_H
 
