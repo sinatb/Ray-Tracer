@@ -4,6 +4,9 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "./lib/stb_image_write.h"
 
+#include "./lib/vec3.h"
+#include "./lib/color.h"
+
 using namespace std;
 int main() {
     //Image
@@ -16,13 +19,11 @@ int main() {
     {
         clog <<'\r'<< "Progress : " << i << " / " << height << " " << flush;
         for (int j=0; j<width; j++) {
-            auto r = double(i) / (height + 1);
-            auto g = 0;
-            auto b = double(j) / (width + 1);
-
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
+            auto c = color (double(i) / (height + 1),0,double(j) / (width + 1));
+            write_color(cout,c);
+            int ir = static_cast<int>(255.999 * c.x());
+            int ig = static_cast<int>(255.999 * c.y());
+            int ib = static_cast<int>(255.999 * c.z());
 
             image_data[i * width * 3 + j * 3] = ir;
             image_data[i * width * 3 + j * 3 + 1] = ig;
