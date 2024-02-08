@@ -80,7 +80,7 @@ inline vec3 operator/ (const vec3& a, const double t){
 inline std::ostream& operator<<(std::ostream &out, vec3& a){
     return out << a.x() << " " << a.y() << " " << a.z();
 }
-inline double dot(vec3& a, vec3& b){
+inline double dot(const vec3& a, const vec3& b){
     return a.x()*b.x() +
            a.y()*b.y() +
            a.z()*b.z();
@@ -90,7 +90,7 @@ inline vec3 cross(vec3& a, vec3& b){
             a.z() * b.x() - a.x() * b.z(),
             a.x() * b.y() - a.y() * b.x()};
 }
-inline vec3 unit_vector(vec3& a){
+inline vec3 unit_vector(vec3 a){
     return a/a.length();
 }
 #endif //VEC3_H

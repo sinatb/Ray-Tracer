@@ -8,12 +8,24 @@
 #include "./lib/color.h"
 #include "./lib/ray.h"
 
+using namespace std;
+bool hits_sphere(ray& r, point3 sphere_center, double radius)
+{
+    auto oc = r.get_start() - sphere_center;
+    auto a = dot(r.get_direction(),r.get_direction());
+    auto b = 2*dot(r.get_direction(),oc);
+    auto c = dot(oc,oc) - radius*radius;
+    if (b*b-4*a*c > 0.0)
+        return true;
+    return false;
+}
 color ray_color(ray& r){
+    if (hits_sphere(r,point3(0.0,0.0,1.0),0.3))
+        return {0.0,0.0,1.0};
     auto a = (r.get_direction().x() + 1.0)*0.5;
     auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
     return c;
 }
-using namespace std;
 int main() {
     //Image
     int width = 800;
@@ -56,6 +68,6 @@ int main() {
             image_data[i * width * 3 + j * 3 + 2] = ib;
         }
     }
-    stbi_write_png("../Images/ray_traced.png",width,height,3,image_data,width*3);
+    stbi_write_png("../Images/sphere.png",width,height,3,image_data,width*3);
     return 0;
 }
