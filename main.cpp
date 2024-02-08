@@ -9,19 +9,25 @@
 #include "./lib/ray.h"
 
 using namespace std;
-bool hits_sphere(ray& r, point3 sphere_center, double radius)
+double hits_sphere(ray& r, point3 sphere_center, double radius)
 {
     auto oc = r.get_start() - sphere_center;
     auto a = dot(r.get_direction(),r.get_direction());
     auto b = 2*dot(r.get_direction(),oc);
     auto c = dot(oc,oc) - radius*radius;
-    if (b*b-4*a*c > 0.0)
-        return true;
-    return false;
+    auto delta = b*b-4*a*c;
+    if (delta > 0.0)
+        return (-b - sqrt(delta))/2*a;
+    return -1.0;
 }
-color ray_color(ray& r){
-    if (hits_sphere(r,point3(0.0,0.0,1.0),0.3))
-        return {0.0,0.0,1.0};
+color ray_color(ray& r)
+{
+    auto hp = hits_sphere(r,point3(0.0,0.0,1.0),0.3);
+    if (hp != -1.0)
+    {
+        auto N = unit_vector(r.at(hp)-vec3(0.0,0.0,1.0));
+        return 0.5*color(-N.x()+1,-N.x()+1,N.z()+1);
+    }
     auto a = (r.get_direction().x() + 1.0)*0.5;
     auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
     return c;
@@ -68,6 +74,6 @@ int main() {
             image_data[i * width * 3 + j * 3 + 2] = ib;
         }
     }
-    stbi_write_png("../Images/sphere.png",width,height,3,image_data,width*3);
+    stbi_write_png("../Images/sphere_shaded.png",width,height,3,image_data,width*3);
     return 0;
 }
