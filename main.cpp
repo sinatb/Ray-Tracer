@@ -7,26 +7,19 @@
 #include "./lib/vec3.h"
 #include "./lib/color.h"
 #include "./lib/ray.h"
+#include "./lib/hittable.h"
+#include "./lib/sphere.h"
 
 using namespace std;
-double hits_sphere(ray& r, point3 sphere_center, double radius)
-{
-    auto oc = r.get_start() - sphere_center;
-    auto a = dot(r.get_direction(),r.get_direction());
-    auto b = 2*dot(r.get_direction(),oc);
-    auto c = dot(oc,oc) - radius*radius;
-    auto delta = b*b-4*a*c;
-    if (delta > 0.0)
-        return (-b - sqrt(delta))/2*a;
-    return -1.0;
-}
 color ray_color(ray& r)
 {
-    auto hp = hits_sphere(r,point3(0.0,0.0,1.0),0.3);
-    if (hp != -1.0)
+    sphere s(point3(0.0,0.0,1.0),0.3);
+    hit_record h;
+    h.t = -1000000.0;
+    auto hp = s.hit(r,-10000,10000,h);
+    if (h.t != -1000000.0)
     {
-        auto N = unit_vector(r.at(hp)-vec3(0.0,0.0,1.0));
-        return 0.5*color(-N.x()+1,-N.x()+1,N.z()+1);
+        return 0.5*color(-h.normal.x()+1,-h.normal.x()+1,h.normal.z()+1);
     }
     auto a = (r.get_direction().x() + 1.0)*0.5;
     auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
@@ -74,6 +67,6 @@ int main() {
             image_data[i * width * 3 + j * 3 + 2] = ib;
         }
     }
-    stbi_write_png("../Images/sphere_shaded.png",width,height,3,image_data,width*3);
+    stbi_write_png("../Images/sphere_shaded_abstraction.png",width,height,3,image_data,width*3);
     return 0;
 }
