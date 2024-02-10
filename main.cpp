@@ -3,23 +3,22 @@
 #include "./lib/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "./lib/stb_image_write.h"
+#include "memory"
 
 #include "./lib/vec3.h"
 #include "./lib/color.h"
 #include "./lib/ray.h"
 #include "./lib/hittable.h"
 #include "./lib/sphere.h"
+#include "./lib/hittable_list.h"
 
 using namespace std;
-color ray_color(ray& r)
+color ray_color(ray& r, const hittable& world)
 {
-    sphere s(point3(0.0,0.0,1.0),0.3);
     hit_record h;
-    h.t = -1000000.0;
-    auto hp = s.hit(r,-10000,10000,h);
-    if (h.t != -1000000.0)
+    if (world.hit(r,-2,10000,h))
     {
-        return 0.5*color(-h.normal.x()+1,-h.normal.x()+1,h.normal.z()+1);
+        return 0.5*(h.normal+color(1,1,1));
     }
     auto a = (r.get_direction().x() + 1.0)*0.5;
     auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
@@ -45,7 +44,17 @@ int main() {
 
     auto vp_tl = camera_center - vec3(0,0,focal_length) - vp_u/2 - vp_v/2;
     auto pixel0_loc = vp_tl + (u_delta+v_delta)/2;
+    //
 
+
+    //object creation on scene
+    hittable_list world;
+    world.add(make_shared<sphere>(point3(0,0,1), 0.3));
+    world.add(make_shared<sphere>(point3(0,-100.5,1), 100));
+
+
+
+    //
 
     uint8_t image_data[width*height*3];
     //Render
@@ -57,7 +66,7 @@ int main() {
             auto direction_pointer = vec3(point - camera_center);
             auto direction = unit_vector(direction_pointer);
             ray r (point,direction);
-            auto c = ray_color(r);
+            auto c = ray_color(r,world);
 
             int ir = static_cast<int>(255.999 * c.x());
             int ig = static_cast<int>(255.999 * c.y());
@@ -67,6 +76,6 @@ int main() {
             image_data[i * width * 3 + j * 3 + 2] = ib;
         }
     }
-    stbi_write_png("../Images/sphere_shaded_abstraction.png",width,height,3,image_data,width*3);
+    stbi_write_png("../Images/world.png",width,height,3,image_data,width*3);
     return 0;
 }

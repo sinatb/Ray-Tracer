@@ -6,7 +6,7 @@
 #define SPHERE_H
 #include "hittable.h"
 #include "ray.h"
-class sphere : hittable{
+class sphere : public hittable{
 public:
     sphere(point3 center, double radius) : center(center), radius(radius){}
     bool hit(ray &r, double t_min, double t_max, hit_record &h) const override {
