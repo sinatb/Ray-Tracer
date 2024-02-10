@@ -31,7 +31,8 @@ public:
 
         h.t = root;
         h.hp = r.at(root);
-        h.normal = (h.hp - center)/radius;
+        auto normal = (h.hp - center)/radius;
+        h.set_face_normal(r,normal);
 
         return true;
     }

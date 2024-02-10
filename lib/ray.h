@@ -11,10 +11,10 @@ public:
 
     ray(point3& start, vec3& direction) : direction(direction), start(start){}
 
-    point3 get_start(){
+    point3 get_start() const{
         return start;
     }
-    vec3 get_direction(){
+    vec3 get_direction() const{
         return direction;
     }
 
