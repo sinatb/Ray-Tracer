@@ -8,6 +8,7 @@ add_executable(Ray_Tracer main.cpp
         lib/color.h
         lib/ray.h
         lib/hittable.h
-        lib/sphere.h)
+        lib/sphere.h
+        lib/hittable_list.h)
 
 
