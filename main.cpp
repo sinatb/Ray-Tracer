@@ -3,14 +3,13 @@
 #include "./lib/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "./lib/stb_image_write.h"
-#include "memory"
 
-#include "./lib/vec3.h"
 #include "./lib/color.h"
-#include "./lib/ray.h"
 #include "./lib/hittable.h"
-#include "./lib/sphere.h"
 #include "./lib/hittable_list.h"
+#include "./lib/sphere.h"
+
+#include "./lib/commons.h"
 
 using namespace std;
 color ray_color(ray& r, const hittable& world)
