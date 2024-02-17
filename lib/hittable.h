@@ -4,7 +4,7 @@
 
 #ifndef HITTABLE_H
 #define HITTABLE_H
-#include "ray.h"
+#include "commons.h"
 class hit_record{
 public:
     point3 hp;
@@ -20,6 +20,6 @@ public:
 class hittable{
 public:
     virtual ~hittable() = default;
-    virtual bool hit (ray& r, double t_min, double t_max,hit_record& h) const = 0;
+    virtual bool hit (ray& r, interval ray_i, hit_record& h) const = 0;
 };
 #endif //HITTABLE_H

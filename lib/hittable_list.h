@@ -5,6 +5,7 @@
 #ifndef HITTABLE_LIST_H
 #define HITTABLE_LIST_H
 
+#include "commons.h"
 #include "hittable.h"
 
 #include "memory"
@@ -31,13 +32,13 @@ public:
     }
 
 
-    bool hit(ray &r, double t_min, double t_max, hit_record &h) const override{
+    bool hit(ray &r, interval ray_i, hit_record &h) const override{
         hit_record tmp_h;
         bool hit_anything = false;
-        auto closest_so_far = t_max;
+        auto closest_so_far = ray_i.max;
 
         for (const auto& object : objects){
-            if (object->hit(r,t_min,closest_so_far,tmp_h)){
+            if (object->hit(r,interval(ray_i.min,closest_so_far),tmp_h)){
                 hit_anything = true;
                 closest_so_far = tmp_h.t;
                 h = tmp_h;

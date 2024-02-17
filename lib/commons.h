@@ -7,7 +7,7 @@
 #include <cmath>
 #include <limits>
 #include <memory>
-
+#include "interval.h"
 // Usings
 using std::shared_ptr;
 using std::make_shared;

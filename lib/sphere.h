@@ -4,12 +4,13 @@
 
 #ifndef SPHERE_H
 #define SPHERE_H
+#include "commons.h"
 #include "hittable.h"
 #include "ray.h"
 class sphere : public hittable{
 public:
     sphere(point3 center, double radius) : center(center), radius(radius){}
-    bool hit(ray &r, double t_min, double t_max, hit_record &h) const override {
+    bool hit(ray &r, interval ray_i, hit_record &h) const override {
         auto oc = r.get_start() - center;
         auto a = dot(r.get_direction(),r.get_direction());
         auto b = 2*dot(r.get_direction(),oc);
@@ -23,9 +24,9 @@ public:
         auto r2 = (-b + sqrt(delta))/2*a;
         auto root = r1;
 
-        if (r1 > t_max || r1 < t_min){
+        if (!ray_i.surrounds(r1)){
             root = r2;
-            if (r2 > t_max || r2 < t_min)
+            if (!ray_i.surrounds(r2))
                 return false;
         }
 

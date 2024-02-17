@@ -15,7 +15,7 @@ using namespace std;
 color ray_color(ray& r, const hittable& world)
 {
     hit_record h;
-    if (world.hit(r,-2,10000,h))
+    if (world.hit(r,interval(-2,infinity),h))
     {
         return 0.5*(h.normal+color(1,1,1));
     }
@@ -48,8 +48,8 @@ int main() {
 
     //object creation on scene
     hittable_list world;
-    world.add(make_shared<sphere>(point3(0,0,1), 0.3));
-    world.add(make_shared<sphere>(point3(0,-100.5,1), 100));
+    world.add(make_shared<sphere>(point3(0,0,-1), 0.3));
+    world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 
 
 
