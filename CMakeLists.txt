@@ -11,6 +11,7 @@ add_executable(Ray_Tracer main.cpp
         lib/sphere.h
         lib/hittable_list.h
         lib/commons.h
-        lib/interval.h)
+        lib/interval.h
+        lib/camera.h)
 
 
