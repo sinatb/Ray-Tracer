@@ -17,12 +17,18 @@ public:
                                        max(max)
                                        {};
 
-    bool contains(double a) const{
+    [[nodiscard]] bool contains(double a) const{
         return a >= min && a <= max;
     }
 
-    bool surrounds(double a) const{
+    [[nodiscard]] bool surrounds(double a) const{
         return a > min && a < max;
+    }
+
+    double clamp(double a){
+        if (a > max) return max;
+        if (a < min) return min;
+        return a;
     }
 
     static const interval empty, universe;
