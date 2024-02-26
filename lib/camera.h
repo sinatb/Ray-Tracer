@@ -15,6 +15,10 @@
 #include "color.h"
 
 using namespace std;
+inline double linear_to_gamma(double linear_component)
+{
+    return sqrt(linear_component);
+}
 class camera{
 public:
     void render(const hittable& world){
@@ -41,9 +45,9 @@ public:
                     ray r(camera_center, direction_pointer);
                     auto c = ray_color(r, world,max_depth);
 
-                    tmp_r = valid_range.clamp(tmp_r + c.x()/sampling_factor);
-                    tmp_g = valid_range.clamp(tmp_g + c.y()/sampling_factor);
-                    tmp_b = valid_range.clamp(tmp_b + c.z()/sampling_factor);
+                    tmp_r = valid_range.clamp(tmp_r + linear_to_gamma(c.x())/sampling_factor);
+                    tmp_g = valid_range.clamp(tmp_g + linear_to_gamma(c.y())/sampling_factor);
+                    tmp_b = valid_range.clamp(tmp_b + linear_to_gamma(c.z())/sampling_factor);
                 }
                 int ir = static_cast<int>(255.999 * tmp_r);
                 int ig = static_cast<int>(255.999 * tmp_g);
@@ -89,7 +93,7 @@ private:
         {
             vec3 dir = unit_vector(h.normal + random_unit_vector());
             ray dr(h.hp, dir);
-            return 0.5* ray_color(dr,world,depth-1);
+            return 0.1* ray_color(dr,world,depth-1);
         }
         auto a = (r.get_direction().x() + 1.0)*0.5;
         auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
