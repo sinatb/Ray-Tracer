@@ -20,7 +20,7 @@ public:
     void render(const hittable& world){
         init();
         const double sampling_factor = 10;
-        int max_depth = 10;
+        int max_depth = 50;
         uint8_t image_data[width*height*3];
         for (int i=0; i<height; i++)
         {
@@ -53,7 +53,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/diffuse.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/diffuse_Lambertian .png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
@@ -85,10 +85,10 @@ private:
         hit_record h;
         if (depth <= 0)
             return {0,0,0};
-        if (world.hit(r,interval(0.0,infinity),h))
+        if (world.hit(r,interval(0.0001,infinity),h))
         {
-            vec3 dir = random_on_hemisphere(h.normal);
-            ray dr(h.hp,dir);
+            vec3 dir = unit_vector(h.normal + random_unit_vector());
+            ray dr(h.hp, dir);
             return 0.5* ray_color(dr,world,depth-1);
         }
         auto a = (r.get_direction().x() + 1.0)*0.5;
