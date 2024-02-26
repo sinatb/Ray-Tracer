@@ -19,36 +19,51 @@ class camera{
 public:
     void render(const hittable& world){
         init();
+        const double sampling_factor = 10;
         uint8_t image_data[width*height*3];
         for (int i=0; i<height; i++)
         {
             clog <<'\r'<< "Progress : " << i << " / " << height << " " << flush;
-            for (int j=0; j<width; j++) {
-                auto point = pixel0_loc + (i*v_delta + j*u_delta);
-                auto direction_pointer = vec3(point - camera_center);
-                auto direction = unit_vector(direction_pointer);
-                ray r (point,direction);
-                auto c = ray_color(r,world);
+            for (int j=0; j<width; j++)
+            {
+                double tmp_r ,tmp_g,tmp_b ;
+                tmp_r = tmp_g = tmp_b = 0.0;
+                auto point = pixel0_loc + (i * v_delta + j * u_delta);
 
-                int ir = static_cast<int>(255.999 * c.x());
-                int ig = static_cast<int>(255.999 * c.y());
-                int ib = static_cast<int>(255.999 * c.z());
-                image_data[i * width * 3 + j * 3] = ir;
-                image_data[i * width * 3 + j * 3 + 1] = ig;
-                image_data[i * width * 3 + j * 3 + 2] = ib;
+                for (int sample = 0 ; sample < sampling_factor ; sample++)
+                {
+                    auto dx = rnd_double() + -0.5;
+                    auto dy = rnd_double() + -0.5;
+                    auto sample_point = point + dx*u_delta + dy*v_delta;
+                    auto direction_pointer = sample_point - camera_center;
+                    direction_pointer = unit_vector(direction_pointer);
+                    ray r(camera_center, direction_pointer);
+                    auto c = ray_color(r, world);
+
+                    tmp_r = valid_range.clamp(tmp_r + c.x()/sampling_factor);
+                    tmp_g = valid_range.clamp(tmp_g + c.y()/sampling_factor);
+                    tmp_b = valid_range.clamp(tmp_b + c.z()/sampling_factor);
+                }
+                int ir = static_cast<int>(255.999 * tmp_r);
+                int ig = static_cast<int>(255.999 * tmp_g);
+                int ib = static_cast<int>(255.999 * tmp_b);
+                image_data[i * width * 3 + j * 3] += ir;
+                image_data[i * width * 3 + j * 3 + 1] += ig;
+                image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/world.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/antialiasing.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
     double focal_length{},viewport_width{},ratio{},viewport_height{};
     point3 camera_center;
     vec3 u_delta,v_delta,pixel0_loc;
-
+    interval valid_range;
     void init(){
         width = 800;
         ratio = 16.0/9.0;
+        valid_range = interval(0.0,0.999999);
         height = static_cast<int>((1/ratio)*width);
 
         focal_length = 1.0;
@@ -67,7 +82,7 @@ private:
     }
     static color ray_color(ray& r, const hittable& world){
         hit_record h;
-        if (world.hit(r,interval(-2,infinity),h))
+        if (world.hit(r,interval(0.0,infinity),h))
         {
             return 0.5*(h.normal+color(1,1,1));
         }
