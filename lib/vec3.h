@@ -56,6 +56,10 @@ class vec3{
         double length(){
             return sqrt(length_squared());
         }
+
+        static vec3 random_vector(double min, double max){
+            return {rnd_double_rng(min,max),rnd_double_rng(min,max),rnd_double_rng(min,max)};
+        }
 };
 using point3 = vec3;
 
@@ -92,6 +96,23 @@ inline vec3 cross(vec3& a, vec3& b){
 }
 inline vec3 unit_vector(vec3 a){
     return a/a.length();
+}
+inline vec3 random_in_unit_sphere(){
+    while (true){
+        auto v = vec3::random_vector(-1,1);
+        if (v.length_squared() < 1)
+            return v;
+    }
+}
+inline vec3 random_unit_vector(){
+    return unit_vector(random_in_unit_sphere());
+}
+inline vec3 random_on_hemisphere(const vec3& normal){
+    auto v = random_unit_vector();
+    if (dot(normal,v) > 0)
+        return v;
+    else
+        return -v;
 }
 #endif //VEC3_H
 

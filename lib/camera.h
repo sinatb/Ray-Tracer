@@ -52,7 +52,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/antialiasing.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/diffuse.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
@@ -84,7 +84,9 @@ private:
         hit_record h;
         if (world.hit(r,interval(0.0,infinity),h))
         {
-            return 0.5*(h.normal+color(1,1,1));
+            vec3 dir = random_on_hemisphere(h.normal);
+            ray dr(h.hp,dir);
+            return 0.5* ray_color(dr,world);
         }
         auto a = (r.get_direction().x() + 1.0)*0.5;
         auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);

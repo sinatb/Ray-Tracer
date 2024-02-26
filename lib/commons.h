@@ -34,7 +34,6 @@ inline double rnd_double_rng(double min, double max){
 #include "ray.h"
 #include "vec3.h"
 
-inline vec3 random_vector(){
-    return unit_vector({rnd_double(),rnd_double(),rnd_double()});
-}
+
+
 #endif //COMMONS_H
