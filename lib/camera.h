@@ -20,6 +20,7 @@ public:
     void render(const hittable& world){
         init();
         const double sampling_factor = 10;
+        int max_depth = 10;
         uint8_t image_data[width*height*3];
         for (int i=0; i<height; i++)
         {
@@ -38,7 +39,7 @@ public:
                     auto direction_pointer = sample_point - camera_center;
                     direction_pointer = unit_vector(direction_pointer);
                     ray r(camera_center, direction_pointer);
-                    auto c = ray_color(r, world);
+                    auto c = ray_color(r, world,max_depth);
 
                     tmp_r = valid_range.clamp(tmp_r + c.x()/sampling_factor);
                     tmp_g = valid_range.clamp(tmp_g + c.y()/sampling_factor);
@@ -80,13 +81,15 @@ private:
         auto vp_tl = camera_center - vec3(0,0,focal_length) - vp_u/2 - vp_v/2;
         pixel0_loc = vp_tl + (u_delta+v_delta)/2;
     }
-    static color ray_color(ray& r, const hittable& world){
+    static color ray_color(ray& r, const hittable& world, int depth){
         hit_record h;
+        if (depth <= 0)
+            return {0,0,0};
         if (world.hit(r,interval(0.0,infinity),h))
         {
             vec3 dir = random_on_hemisphere(h.normal);
             ray dr(h.hp,dir);
-            return 0.5* ray_color(dr,world);
+            return 0.5* ray_color(dr,world,depth-1);
         }
         auto a = (r.get_direction().x() + 1.0)*0.5;
         auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
