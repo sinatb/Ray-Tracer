@@ -9,6 +9,7 @@
 #include "cstdlib"
 #include <memory>
 #include "interval.h"
+#include "color.h"
 
 // Usings
 using std::shared_ptr;
