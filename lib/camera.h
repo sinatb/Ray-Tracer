@@ -10,6 +10,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "./stb_image_write.h"
 
+#include "material.h"
 #include "commons.h"
 #include "hittable.h"
 #include "color.h"
@@ -37,8 +38,8 @@ public:
 
                 for (int sample = 0 ; sample < sampling_factor ; sample++)
                 {
-                    auto dx = rnd_double() + -0.5;
-                    auto dy = rnd_double() + -0.5;
+                    auto dx = random_double() + -0.5;
+                    auto dy = random_double() + -0.5;
                     auto sample_point = point + dx*u_delta + dy*v_delta;
                     auto direction_pointer = sample_point - camera_center;
                     direction_pointer = unit_vector(direction_pointer);
@@ -57,7 +58,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/diffuse_Lambertian .png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/metal-diffuse.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
@@ -91,9 +92,12 @@ private:
             return {0,0,0};
         if (world.hit(r,interval(0.0001,infinity),h))
         {
-            vec3 dir = unit_vector(h.normal + random_unit_vector());
-            ray dr(h.hp, dir);
-            return 0.1* ray_color(dr,world,depth-1);
+            ray scattered;
+            color attenuation;
+            if (h.mat->scatter(r,h,attenuation,scattered)) {
+                return attenuation * ray_color(scattered,world,depth-1);
+            }
+            return {0,0,0};
         }
         auto a = (r.get_direction().x() + 1.0)*0.5;
         auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);

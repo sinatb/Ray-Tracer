@@ -4,11 +4,13 @@
 
 #ifndef HITTABLE_H
 #define HITTABLE_H
-#include "commons.h"
+class material;
+
 class hit_record{
 public:
     point3 hp;
     vec3 normal;
+    shared_ptr<material> mat;
     double t;
     bool front_face;
 
@@ -22,4 +24,5 @@ public:
     virtual ~hittable() = default;
     virtual bool hit (ray& r, interval ray_i, hit_record& h) const = 0;
 };
+
 #endif //HITTABLE_H

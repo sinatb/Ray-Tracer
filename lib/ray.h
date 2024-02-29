@@ -9,7 +9,7 @@ class ray{
 public:
     ray()= default ;
 
-    ray(point3& start, vec3& direction) : direction(direction), start(start){}
+    ray(const point3& start,const vec3& direction) : direction(direction), start(start){}
 
     point3 get_start() const{
         return start;

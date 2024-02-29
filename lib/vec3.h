@@ -56,9 +56,13 @@ class vec3{
         double length(){
             return sqrt(length_squared());
         }
+        [[nodiscard]] bool near_zero() const {
+            auto s = 1e-8;
+            return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+        }
 
         static vec3 random_vector(double min, double max){
-            return {rnd_double_rng(min,max),rnd_double_rng(min,max),rnd_double_rng(min,max)};
+            return {random_double(min,max),random_double(min,max),random_double(min,max)};
         }
 };
 using point3 = vec3;
@@ -113,6 +117,9 @@ inline vec3 random_on_hemisphere(const vec3& normal){
         return v;
     else
         return -v;
+}
+vec3 reflect(const vec3& v, const vec3& n) {
+    return v - 2*dot(v,n)*n;
 }
 #endif //VEC3_H
 

@@ -4,12 +4,14 @@
 
 #ifndef SPHERE_H
 #define SPHERE_H
+#include <utility>
 #include "commons.h"
 #include "hittable.h"
 #include "ray.h"
 class sphere : public hittable{
 public:
-    sphere(point3 center, double radius) : center(center), radius(radius){}
+    //Beware this std::move might create problems;
+    sphere(point3 center, double radius, shared_ptr<material> m) : center(center), radius(radius), mat(std::move(m)){}
     bool hit(ray &r, interval ray_i, hit_record &h) const override {
         auto oc = r.get_start() - center;
         auto a = dot(r.get_direction(),r.get_direction());
@@ -34,11 +36,13 @@ public:
         h.hp = r.at(root);
         auto normal = (h.hp - center)/radius;
         h.set_face_normal(r,normal);
+        h.mat = mat;
 
         return true;
     }
 private:
     vec3 center;
+    shared_ptr<material> mat;
     double radius;
 };
 #endif //SPHERE_H
