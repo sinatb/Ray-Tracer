@@ -72,15 +72,22 @@ public:
 
         vec3 direction;
 
-        if (sin_theta * reflectance_ratio <= 1.0)
-            direction = refract(unit_direction,h.normal,reflectance_ratio);
-        else
+        bool cannot_reflect = sin_theta * reflectance_ratio > 1.0;
+
+        if (cannot_reflect || reflectance(cos_theta,reflectance_ratio)>random_double())
             direction = reflect(unit_direction,h.normal);
+        else
+            direction = refract(unit_direction,h.normal,reflectance_ratio);
 
         scattered = ray(h.hp, unit_vector(direction));
         return true;
     }
 private:
     double ir;
+    static double reflectance  (double cosine, double ref_index){
+        auto r0 = (1-ref_index)/(1+ref_index);
+        r0 *= r0;
+        return r0 + (1-r0)* pow((1-r0),5);
+    }
 };
 #endif //MATERIAL_H
