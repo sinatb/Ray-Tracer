@@ -58,7 +58,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/metal-fuzzy.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/dielectric.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};

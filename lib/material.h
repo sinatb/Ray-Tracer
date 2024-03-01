@@ -54,4 +54,33 @@ private:
     double fuzz;
     color albedo;
 };
+
+class dielectric : public material{
+public:
+    explicit dielectric(double reflectance) : ir(reflectance){}
+
+    bool scatter(const ray& r_in, const hit_record& h, color& attenuation, ray& scattered)
+    const override{
+        attenuation = color(1.0,1.0,1.0);
+
+        double reflectance_ratio = h.front_face ? 1.0/ir : ir;
+
+        auto unit_direction = unit_vector(r_in.get_direction());
+
+        double cos_theta = fmin(dot(-unit_direction,h.normal),1.0);
+        double sin_theta = sqrt(1-cos_theta*cos_theta);
+
+        vec3 direction;
+
+        if (sin_theta * reflectance_ratio <= 1.0)
+            direction = refract(unit_direction,h.normal,reflectance_ratio);
+        else
+            direction = reflect(unit_direction,h.normal);
+
+        scattered = ray(h.hp, unit_vector(direction));
+        return true;
+    }
+private:
+    double ir;
+};
 #endif //MATERIAL_H
