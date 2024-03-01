@@ -67,7 +67,7 @@ private:
     vec3 u_delta,v_delta,pixel0_loc;
     interval valid_range;
     void init(){
-        width = 800;
+        width = 1200;
         ratio = 16.0/9.0;
         valid_range = interval(0.0,0.999999);
         height = static_cast<int>((1/ratio)*width);

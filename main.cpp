@@ -17,8 +17,6 @@ int main() {
     auto material_right  = make_shared<metal>(color(0.8, 0.6, 0.2),1.0);
 
 
-
-
     world.add(make_shared<sphere>(point3(0,0,-1), 0.3,material_center));
     world.add(make_shared<sphere>(point3(0,-100.5,-1), 100,material_ground));
     world.add(make_shared<sphere>(point3(-0.7,    0.0, -1.0),   0.3, material_left));
