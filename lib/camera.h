@@ -22,9 +22,14 @@ inline double linear_to_gamma(double linear_component)
 }
 class camera{
 public:
+    double vfov = 90;
+    point3 lookfrom = point3(0,0,-1);
+    point3 lookat   = point3(0,0,0);
+    vec3   vup      = vec3(0,1,0);
+
     void render(const hittable& world){
         init();
-        const double sampling_factor = 10;
+        const double sampling_factor = 500;
         int max_depth = 50;
         uint8_t image_data[width*height*3];
         for (int i=0; i<height; i++)
@@ -58,7 +63,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/dielectric_schlick.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/final.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
@@ -66,24 +71,33 @@ private:
     point3 camera_center;
     vec3 u_delta,v_delta,pixel0_loc;
     interval valid_range;
+    vec3   u, v, w;
+
     void init(){
         width = 1200;
         ratio = 16.0/9.0;
         valid_range = interval(0.0,0.999999);
         height = static_cast<int>((1/ratio)*width);
 
-        focal_length = 1.0;
-        viewport_width = 2.0;
-        viewport_height = viewport_width * (static_cast<double>(height)/width);
-        camera_center = point3(0,0,0);
+        camera_center = lookfrom;
 
-        auto vp_u = vec3(viewport_width,0,0);
-        auto vp_v = vec3(0,-viewport_height,0);
+        focal_length = focal_length = (lookfrom - lookat).length();
+        auto theta = degrees_to_radians(vfov);
+        auto h = tan(theta/2);
+        viewport_height = 2 * h * focal_length;
+        viewport_width = viewport_height * (static_cast<double>(width)/ height);
+
+        w = unit_vector(lookfrom - lookat);
+        u = unit_vector(cross(vup, w));
+        v = cross(w, u);
+
+        auto vp_u = viewport_width * u;
+        auto vp_v = viewport_height * -v;
 
         u_delta = vp_u/width;
         v_delta = vp_v/height;
 
-        auto vp_tl = camera_center - vec3(0,0,focal_length) - vp_u/2 - vp_v/2;
+        auto vp_tl = camera_center - (focal_length * w) - vp_u/2 - vp_v/2;
         pixel0_loc = vp_tl + (u_delta+v_delta)/2;
     }
     static color ray_color(ray& r, const hittable& world, int depth){
