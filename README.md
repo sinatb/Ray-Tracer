@@ -42,6 +42,10 @@ It should be mentioned that all the above codes need to be added to the `main.cp
 Examples of different stages of the ray tracer are available in the images folder of this project. A final high resolution
 render of the engine is present below.
 
+![final render](./Images/final.png)
+
 ## Further work
 Adding more advanced techniques to the ray tracer and more classes of objects and materials. And including actual lights
 for more realistic rendering.
+Also, the render times for high quality scenes is very long and that is because the program is running in a single core.
+Adding threads and multiprocessing to this code can improve it's performance time significantly.
