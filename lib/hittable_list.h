@@ -55,7 +55,7 @@ public:
                    fmax(box0.maximum.y(), box1.maximum.y()),
                    fmax(box0.maximum.z(), box1.maximum.z()));
 
-        return aabb(small,big);
+        return {small,big};
     }
     bool bounding_box(aabb& output_box) const override{
         if (objects.empty()) return false;

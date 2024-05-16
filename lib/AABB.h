@@ -13,8 +13,7 @@ public:
     aabb(){}
     aabb(const point3& minimum_p, const point3& maximum_p) : minimum(minimum_p),maximum(maximum_p){}
 
-    bool hit(const ray& r,double t_min, double t_max)
-    {
+    bool hit(const ray& r,double t_min, double t_max) const {
         for (int a = 0; a < 3; a++) {
             auto invD = 1.0f / r.get_direction()[a];
             auto t0 = (minimum[a] - r.get_start()[a]) * invD;

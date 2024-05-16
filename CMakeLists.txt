@@ -14,7 +14,8 @@ add_executable(Ray_Tracer main.cpp
         lib/interval.h
         lib/camera.h
         lib/material.h
-        lib/AABB.h)
+        lib/AABB.h
+        lib/bvh_node.h)
 MATH(EXPR stack_size "16 * 1024 * 1024") # 16 Mb
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--stack,${stack_size}")
 
