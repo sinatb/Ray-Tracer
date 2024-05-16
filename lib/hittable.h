@@ -4,6 +4,7 @@
 
 #ifndef HITTABLE_H
 #define HITTABLE_H
+#include "AABB.h"
 class material;
 
 class hit_record{
@@ -23,6 +24,7 @@ class hittable{
 public:
     virtual ~hittable() = default;
     virtual bool hit (ray& r, interval ray_i, hit_record& h) const = 0;
+    virtual bool bounding_box(aabb& output_box) const = 0;
 };
 
 #endif //HITTABLE_H
