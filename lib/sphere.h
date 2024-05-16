@@ -11,7 +11,11 @@
 class sphere : public hittable{
 public:
     //Beware this std::move might create problems;
-    sphere(point3 center, double radius, shared_ptr<material> m) : center(center), radius(radius), mat(std::move(m)){}
+    sphere(point3 center, double radius, shared_ptr<material> m) : center(center), radius(radius), mat(std::move(m))
+    {
+        auto rvec = vec3(radius, radius, radius);
+        bbox = aabb(center - rvec, center + rvec);
+    }
     bool hit(ray &r, interval ray_i, hit_record &h) const override {
         auto oc = r.get_start() - center;
         auto a = dot(r.get_direction(),r.get_direction());
@@ -40,15 +44,12 @@ public:
 
         return true;
     }
-    bool bounding_box(aabb &output_box) const override{
-        output_box = aabb(
-                center - vec3(radius,radius,radius),
-                center + vec3(radius,radius,radius)
-        );
-        return true;
+    aabb bounding_box() const override{
+        return bbox;
     }
 private:
     vec3 center;
+    aabb bbox;
     shared_ptr<material> mat;
     double radius;
 };

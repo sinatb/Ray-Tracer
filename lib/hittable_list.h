@@ -29,6 +29,8 @@ public:
     }
     void add(const shared_ptr<hittable>& obj){
         objects.push_back(obj);
+        bbox = aabb(bbox, obj->bounding_box());
+
     }
 
 
@@ -57,21 +59,10 @@ public:
 
         return {small,big};
     }
-    bool bounding_box(aabb& output_box) const override{
-        if (objects.empty()) return false;
-
-        aabb temp_box;
-        bool first_box = true;
-
-        for (const auto& object : objects) {
-            if (!object->bounding_box(temp_box)) return false;
-            output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
-            first_box = false;
-        }
-        return true;
+    [[nodiscard]] aabb bounding_box() const override{
+        return bbox;
     }
+private:
+    aabb bbox;
 };
-
-
-
 #endif //HITTABLE_LIST_H

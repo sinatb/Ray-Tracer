@@ -63,7 +63,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/final.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/final-bvh.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
