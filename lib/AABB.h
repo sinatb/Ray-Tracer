@@ -15,13 +15,14 @@ public:
 
     bool hit(const ray& r,double t_min, double t_max)
     {
-        for (int c=0;c<3;c++){
-            auto t0 = fmin((minimum[c] - r.get_start()[c]) / r.get_direction()[c],
-                           (maximum[c] - r.get_start()[c]) / r.get_direction()[c]);
-            auto t1 = fmax((minimum[c] - r.get_start()[c]) / r.get_direction()[c],
-                           (maximum[c] - r.get_start()[c]) / r.get_direction()[c]);
-            t_min = fmax(t0, t_min);
-            t_max = fmin(t1, t_max);
+        for (int a = 0; a < 3; a++) {
+            auto invD = 1.0f / r.get_direction()[a];
+            auto t0 = (minimum[a] - r.get_start()[a]) * invD;
+            auto t1 = (maximum[a] - r.get_start()[a]) * invD;
+            if (invD < 0.0f)
+                std::swap(t0, t1);
+            t_min = t0 > t_min ? t0 : t_min;
+            t_max = t1 < t_max ? t1 : t_max;
             if (t_max <= t_min)
                 return false;
         }
