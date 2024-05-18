@@ -9,11 +9,12 @@ code is that it is not realtime and runs on the cpu.
 ## How to use
 For using this project you will need to add the object's you want to be rendered to the scene. At the current version only
 spheres can be rendered by the engine, So you will have to add some sphere's to the world and after that, you will need to
-add a material to each of these spheres. Currently, 3 classes of materials are available.
+add a material to each of these spheres. Currently, 4 classes of materials are available.
 
  - matte (lambertian)
  - metal
  - dielectric
+ - diffuse light
 
 After that you will have to choose a location for the camera to cast the rays at the target and start rendering the scene.
 
@@ -38,11 +39,18 @@ c.render(world);
 ```
 It should be mentioned that all the above codes need to be added to the `main.cpp` file.
 
+## Features
+The current version of the engine supports bvh for improving the render time of scenes. The first example seen in the b
+Examples section is rendered without the bvh optimizations and took nearly 18 hours to render, while the second image, 
+with the same amount of objects and more complex calculations for the lighting took only 40 minutes to render.
+Support for emmisive materials and simples lights has been added to. Although in the current version there are not textures
+for the light or the objects.
 ## Examples
 Examples of different stages of the ray tracer are available in the images folder of this project. A final high resolution
 render of the engine is present below.
 
 ![final render](./Images/final.png)
+![final lighting render](./Images/final-bvh-light.png)
 
 ## Further work
 Adding more advanced techniques to the ray tracer and more classes of objects and materials. And including actual lights
