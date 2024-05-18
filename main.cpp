@@ -22,8 +22,11 @@ int main() {
 
             if ((center - point3(4, 0.2, 0)).length() > 0.9) {
                 shared_ptr<material> sphere_material;
+                if (choose_mat < 0.2){
+                    sphere_material = make_shared<diffuse_light>(color(1,0.85,0.72));
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
 
-                if (choose_mat < 0.8) {
+                } else if (choose_mat < 0.8) {
                     // diffuse
                     auto albedo = color::random_vector(0.0,1.0) * color::random_vector(0.0,1.0);
                     sphere_material = make_shared<lambertian>(albedo);
@@ -59,6 +62,6 @@ int main() {
     c.lookfrom = point3(13,2,3);
     c.lookat   = point3(0,0,0);
     c.vup      = vec3(0,1,0);
-    c.render(world);
+    c.render(world,color(0.0, 0.0, 0.0));
     return 0;
 }

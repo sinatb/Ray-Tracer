@@ -63,7 +63,7 @@ public:
                 image_data[i * width * 3 + j * 3 + 2] += ib;
             }
         }
-        stbi_write_png("../Images/final-bvh.png",width,height,3,image_data,width*3);
+        stbi_write_png("../Images/final-bvh-light.png",width,height,3,image_data,width*3);
     }
 private:
     int width{},height{};
@@ -110,7 +110,7 @@ private:
             color attenuation;
             color emitted = h.mat->emitted();
             if (h.mat->scatter(r,h,attenuation,scattered)) {
-                return attenuation * ray_color(scattered,world,background,depth-1);
+                return emitted + attenuation * ray_color(scattered,world,background,depth-1);
             }
             return emitted;
         }else{

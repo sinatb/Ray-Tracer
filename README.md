@@ -48,4 +48,4 @@ render of the engine is present below.
 Adding more advanced techniques to the ray tracer and more classes of objects and materials. And including actual lights
 for more realistic rendering.
 Also, the render times for high quality scenes is very long and that is because the program is running in a single core.
-Adding threads and multiprocessing to this code can improve it's performance time significantly.
+Adding threads and multiprocessing to this code can improve its performance time significantly.
