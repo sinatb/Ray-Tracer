@@ -27,7 +27,7 @@ public:
     point3 lookat   = point3(0,0,0);
     vec3   vup      = vec3(0,1,0);
 
-    void render(const hittable& world){
+    void render(const hittable& world, const color background){
         init();
         const double sampling_factor = 500;
         int max_depth = 50;
@@ -49,7 +49,7 @@ public:
                     auto direction_pointer = sample_point - camera_center;
                     direction_pointer = unit_vector(direction_pointer);
                     ray r(camera_center, direction_pointer);
-                    auto c = ray_color(r, world,max_depth);
+                    auto c = ray_color(r, world,background,max_depth);
 
                     tmp_r = valid_range.clamp(tmp_r + linear_to_gamma(c.x())/sampling_factor);
                     tmp_g = valid_range.clamp(tmp_g + linear_to_gamma(c.y())/sampling_factor);
@@ -100,7 +100,7 @@ private:
         auto vp_tl = camera_center - (focal_length * w) - vp_u/2 - vp_v/2;
         pixel0_loc = vp_tl + (u_delta+v_delta)/2;
     }
-    static color ray_color(ray& r, const hittable& world, int depth){
+    static color ray_color(ray& r, const hittable& world,const color background, int depth){
         hit_record h;
         if (depth <= 0)
             return {0,0,0};
@@ -108,10 +108,13 @@ private:
         {
             ray scattered;
             color attenuation;
+            color emitted = h.mat->emitted();
             if (h.mat->scatter(r,h,attenuation,scattered)) {
-                return attenuation * ray_color(scattered,world,depth-1);
+                return attenuation * ray_color(scattered,world,background,depth-1);
             }
-            return {0,0,0};
+            return emitted;
+        }else{
+            return background;
         }
         auto a = (r.get_direction().x() + 1.0)*0.5;
         auto c = a*color(1.0,1.0,1.0) + (1-a)*color (0.5,0.5,1.0);
